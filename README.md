@@ -1,4 +1,6 @@
-# todo
+# todo 一个简单的代办事项
+
+发布在 https://lllpla.github.io/todo/
 
 ## Project setup
 ```
