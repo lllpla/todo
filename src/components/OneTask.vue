@@ -17,7 +17,7 @@
           ></el-button>
         </el-tooltip>
       </div>
-      <div v-if="cardState != 'active'">
+      <div v-if="cardState == 'finish'">
         <span class="title-finish">{{ title }}</span>
         <el-tooltip
           content="恢复任务"
