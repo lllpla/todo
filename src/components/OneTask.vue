@@ -101,7 +101,7 @@ export default {
 .title-active {
   text-align: left;
   font-size: large;
-  color: cornflowerblue;
+  color: black;
 }
 .title-finish {
   text-align: left;
@@ -116,8 +116,5 @@ export default {
 }
 .clearfix:after {
   clear: both;
-}
-
-.box-card {
 }
 </style>

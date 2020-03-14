@@ -9,10 +9,10 @@
         :xl="{ span: 12, offset: 6 }"
       >
         <el-container class="container">
-          <el-header>
+          <el-header id="header">
             <el-row :gutter="10">
               <el-col :span="8">
-                <h1>代办项列表</h1>
+                <h3>代办项列表</h3>
               </el-col>
               <el-col :span="16"
                 ><el-input
@@ -21,7 +21,7 @@
                   placeholder="添加一个任务"
                 >
                   <el-button
-                    type="primary"
+                    type="success"
                     icon="el-icon-plus"
                     @click="addTask()"
                     slot="append"
@@ -29,7 +29,7 @@
               ></el-col>
             </el-row>
           </el-header>
-          <el-main>
+          <el-main id="main">
             <div id="taskList">
               <OneTask
                 v-for="item in todoList"
@@ -42,9 +42,9 @@
             </div>
             <div></div>
           </el-main>
-          <el-footer>
+          <el-footer id="footer">
             <div style="float:right;margin-top:20px;font-size:smaller">
-              <el-link type="primary" href="https://github.com/lllpla/todo"
+              <el-link type="success" href="https://github.com/lllpla/todo"
                 >源码</el-link
               >
               powered by lllpla
@@ -133,7 +133,7 @@ export default {
 
 <style>
 .container {
-  height: 95vh;
+  height: 98vh;
   width: 100%;
   background: mintcream;
 }
@@ -145,13 +145,19 @@ export default {
   height: 98vh;
 }
 
-#el-header {
+#header {
   height: 5vh;
+  background: lightslategrey;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
-#el-main {
-  height: 85vh;
+#main {
+  height: 90vh;
+  background: whitesmoke;
 }
-#el-footer {
+#footer {
   height: 3vh;
+  background: lightslategrey;
+  color: white;
 }
 </style>
