@@ -2,7 +2,7 @@
   <div id="app" style="width:800px;margin:0 auto">
     <el-container>
       <el-header>
-        <h1>任务测试</h1>
+        <h1>代办项列表</h1>
       </el-header>
       <el-main>
         <el-input v-model="inputText" placeholder="添加一个任务">
@@ -18,6 +18,7 @@
           :key="item.id"
           :title="item.text"
           :createTime="item.time"
+          :state="item.state"
           :id="item.id"
         ></OneTask>
       </el-main>
@@ -37,19 +38,25 @@ export default {
   data() {
     return {
       todoList: [],
-      inputText: "",
-      nowId: 0
+      inputText: ""
     };
   },
 
   methods: {
     addTask() {
+      if (this.inputText == "") {
+        this.$message.error("任务内容不能为空");
+        return;
+      }
+
+      const id = this.todoList.length == 0 ? 0 : this.todoList[0].id + 1;
       const todo = {
         text: this.inputText,
-        id: this.nowId++,
-        time: dateFormat()
+        id: id,
+        time: dateFormat(),
+        state: "active"
       };
-      this.todoList.push(todo);
+      this.todoList.unshift(todo);
       this.inputText = "";
       this.$cookies.set("todoList", JSON.stringify(this.todoList), Infinity);
     }
@@ -59,6 +66,28 @@ export default {
     if (todoList) {
       this.todoList = JSON.parse(todoList);
     }
+  },
+  created() {
+    this.$bus.$on("changeState", data => {
+      if (data.state == "delete") {
+        this.todoList = this.todoList.filter(todo => todo.id != data.id);
+      } else {
+        let thisTodo = this.todoList.filter(todo => todo.id == data.id);
+        if (thisTodo.length == 1) {
+          thisTodo[0].state = data.state;
+          this.todoList = this.todoList.sort((a, b) => {
+            if (a.state != b.state) {
+              if (a.state == "active") {
+                return -1;
+              }
+            } else {
+              return b.id - a.id;
+            }
+          });
+        }
+        this.$cookies.set("todoList", JSON.stringify(this.todoList), Infinity);
+      }
+    });
   }
 };
 </script>
@@ -68,8 +97,8 @@ export default {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  background: whitesmoke;
 }
 </style>
