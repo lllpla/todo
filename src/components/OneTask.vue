@@ -1,56 +1,104 @@
 <template>
-  <el-card class="box-card">
+  <el-card class="box-card" shadow="hover">
     <div slot="header" class="clearfix">
-      <div v-if="cardState == 'active'">
-        <span class="title-active">{{ title }}</span>
-        <el-tooltip
-          content="标记完成"
-          placement="bottom"
-          effect="light"
-          :open-delay="200"
-        >
-          <el-button
-            class="title-button"
-            icon="el-icon-check"
-            @click="handleFinish()"
-            circle
-          ></el-button>
-        </el-tooltip>
-      </div>
-      <div v-if="cardState == 'finish'">
-        <span class="title-finish">{{ title }}</span>
-        <el-tooltip
-          content="恢复任务"
-          placement="bottom"
-          effect="light"
-          :open-delay="200"
-        >
-          <el-button
-            class="title-button"
-            icon="el-icon-refresh"
-            @click="handleActive()"
-            circle
-          ></el-button>
-        </el-tooltip>
-        <el-tooltip
-          content="删除任务"
-          placement="bottom"
-          effect="light"
-          :open-delay="200"
-        >
-          <el-button
-            class="title-button"
-            type="danger"
-            icon="el-icon-delete"
-            @click="handleDelete()"
-            circle
-          ></el-button>
-        </el-tooltip>
+      <el-form :inline="true" v-if="objectData.state == 'active'">
+        <el-col :span="4">
+          <el-form-item size="small">
+            <el-select
+              v-model="objectData.tag"
+              @change="handleChange()"
+              default-first-option
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="16">
+          <el-form-item size="small">
+            <span class="title-active">{{ objectData.title }}</span>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
+          <el-form-item size="small" class="button-group">
+            <el-tooltip
+              content="标记完成"
+              placement="bottom"
+              effect="light"
+              :open-delay="200"
+            >
+              <el-button
+                class="title-button"
+                icon="el-icon-check"
+                @click="handleFinish()"
+                circle
+              ></el-button>
+            </el-tooltip>
+          </el-form-item>
+        </el-col>
+      </el-form>
+      <div v-if="objectData.state == 'finish'">
+        <el-form>
+          <el-col :span="4">
+            <el-form-item size="small">
+              <el-select v-model="objectData.tag" disabled="true">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="16">
+            <el-form-item size="small">
+              <span class="title-finish">{{ objectData.title }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="4">
+            <el-form-item size="small" class="button-group">
+              <el-tooltip
+                content="恢复任务"
+                placement="bottom"
+                effect="light"
+                :open-delay="200"
+              >
+                <el-button
+                  class="title-button"
+                  icon="el-icon-refresh"
+                  @click="handleActive()"
+                  circle
+                ></el-button>
+              </el-tooltip>
+              <el-tooltip
+                content="删除任务"
+                placement="bottom"
+                effect="light"
+                :open-delay="200"
+              >
+                <el-button
+                  class="title-button"
+                  type="danger"
+                  icon="el-icon-delete"
+                  @click="handleDelete()"
+                  circle
+                ></el-button>
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+        </el-form>
       </div>
     </div>
     <el-row>
       <el-col :span="8">{{ id }}</el-col>
-      <el-col :span="16" class="timezone">{{ createTime }}</el-col>
+      <el-col :span="16" class="timezone">{{ objectData.createTime }}</el-col>
     </el-row>
   </el-card>
 </template>
@@ -61,6 +109,10 @@ export default {
     title: String,
     createTime: String,
     id: Number,
+    tag: {
+      type: String,
+      default: "work"
+    },
     state: {
       type: String,
       default: "active"
@@ -68,21 +120,35 @@ export default {
   },
   data() {
     return {
-      cardState: this.state
+      objectData: {
+        createTime: this.createTime,
+        tag: this.tag,
+        title: this.title,
+        id: this.id,
+        state: this.state
+      },
+      options: [
+        { value: "work", label: "工作" },
+        { value: "study", label: "学习" },
+        { value: "life", label: "生活" }
+      ]
     };
   },
   methods: {
+    handleChange() {
+      this.$bus.$emit("changeState", this.objectData);
+    },
     handleFinish() {
-      this.cardState = "finish";
-      this.$bus.$emit("changeState", { id: this.id, state: this.cardState });
+      this.objectData.state = "finish";
+      this.$bus.$emit("changeState", this.objectData);
     },
     handleActive() {
-      this.cardState = "active";
-      this.$bus.$emit("changeState", { id: this.id, state: this.cardState });
+      this.objectData.state = "active";
+      this.$bus.$emit("changeState", this.objectData);
     },
     handleDelete() {
-      this.cardState = "delete";
-      this.$bus.$emit("changeState", { id: this.id, state: this.cardState });
+      this.objectData.state = "delete";
+      this.$bus.$emit("changeState", this.objectData);
     }
   },
   beforeDestroy() {
@@ -91,6 +157,12 @@ export default {
 };
 </script>
 <style>
+.box-card {
+  margin-top: 10px;
+}
+.button-group {
+  float: right;
+}
 .title-button {
   float: right;
 }

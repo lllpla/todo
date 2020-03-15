@@ -34,9 +34,10 @@
               <OneTask
                 v-for="item in todoList"
                 :key="item.id"
-                :title="item.text"
-                :createTime="item.time"
+                :title="item.title"
+                :createTime="item.createTime"
                 :state="item.state"
+                :tag="item.tag"
                 :id="item.id"
               ></OneTask>
             </div>
@@ -81,9 +82,10 @@ export default {
 
       const id = this.todoList.length == 0 ? 0 : this.todoList[0].id + 1;
       const todo = {
-        text: this.inputText,
+        title: this.inputText,
         id: id,
-        time: dateFormat(),
+        tag: "work",
+        createTime: dateFormat(),
         state: "active"
       };
       this.todoList.unshift(todo);
@@ -105,26 +107,27 @@ export default {
         });
         this.$cookies.set("todoList", JSON.stringify(this.todoList), Infinity);
       } else {
-        let thisTodo = this.todoList.filter(todo => {
-          return todo.id == data.id;
+        this.todoList.forEach(element => {
+          if (element.id == data.id) {
+            element = data;
+          }
         });
-        if (thisTodo.length == 1) {
-          thisTodo[0].state = data.state;
-          this.todoList = this.todoList.sort((a, b) => {
-            if (a.state != b.state) {
-              if (a.state == "active") {
-                return -1;
-              }
-            } else {
-              return b.id - a.id;
-            }
-          });
-          this.$cookies.set(
-            "todoList",
-            JSON.stringify(this.todoList),
-            Infinity
-          );
+        for (var index = 0; index < this.todoList.length; index++) {
+          if (this.todoList[index].id == data.id) {
+            this.todoList[index] = data;
+          }
         }
+
+        this.todoList = this.todoList.sort((a, b) => {
+          if (a.state != b.state) {
+            if (a.state == "active") {
+              return -1;
+            }
+          } else {
+            return b.id - a.id;
+          }
+        });
+        this.$cookies.set("todoList", JSON.stringify(this.todoList), Infinity);
       }
     });
   }
@@ -153,7 +156,7 @@ export default {
 }
 #main {
   height: 90vh;
-  background: whitesmoke;
+  background: white;
 }
 #footer {
   height: 3vh;
