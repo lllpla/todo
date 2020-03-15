@@ -46,7 +46,7 @@
         <el-form>
           <el-col :span="4">
             <el-form-item size="small">
-              <el-select v-model="objectData.tag" disabled="true">
+              <el-select v-model="objectData.tag" :disabled="true">
                 <el-option
                   v-for="item in options"
                   :key="item.value"
