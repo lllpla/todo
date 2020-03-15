@@ -139,6 +139,8 @@ export default {
   height: 98vh;
   width: 100%;
   background: mintcream;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;

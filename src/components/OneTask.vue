@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card" shadow="hover">
+  <el-card :class="objectData.tag" shadow="hover">
     <div slot="header" class="clearfix">
       <el-form :inline="true" v-if="objectData.state == 'active'">
         <el-col :span="4">
@@ -157,9 +157,19 @@ export default {
 };
 </script>
 <style>
-.box-card {
+.life {
   margin-top: 10px;
+  color: blueviolet !important;
 }
+.work {
+  margin-top: 10px;
+  color: saddlebrown !important;
+}
+.study {
+  margin-top: 10px;
+  color: olivedrab !important;
+}
+
 .button-group {
   float: right;
 }
@@ -173,12 +183,10 @@ export default {
 .title-active {
   text-align: left;
   font-size: large;
-  color: black;
 }
 .title-finish {
   text-align: left;
   font-size: large;
-  color: darkgray;
   text-decoration: line-through;
 }
 .clearfix:before,
