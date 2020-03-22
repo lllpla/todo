@@ -1,28 +1,36 @@
 <template>
-  <v-form ref="form" style="margin-left:10px;margin-right:10px">
+  <div style="margin-left: 10px">
     <v-row>
       <v-col lg="2" md="4" sm="4">
         <v-select
+          class="body-2"
           :items="taskTypes"
           v-model="type"
           label="任务类型"
-          :solo="solo"
-          dense
           :outlined="outlined"
           :disabled="thisDisabled"
+          dense
+          hide-details
         ></v-select>
       </v-col>
       <v-col lg="8" md="6" sm="6">
         <v-text-field
+          class="body-2"
           placeholder="请输入任务内容"
-          :solo="solo"
           label="任务内容"
-          dense
           :disabled="thisDisabled"
           :outlined="outlined"
           v-model="text"
+          dense
+          hide-details
         >
-          <v-btn slot="append" v-if="isNew == true" @click="addTask" icon>
+          <v-btn
+            slot="append"
+            color="success"
+            v-if="isNew == true"
+            @click="addTask"
+            icon
+          >
             <v-icon>add_circle</v-icon>
           </v-btn>
         </v-text-field>
@@ -56,7 +64,7 @@
     <v-snackbar v-model="snackbar" :timeout="1000" top color="error">
       任务不能为空
     </v-snackbar>
-  </v-form>
+  </div>
 </template>
 <script>
 import uuidv1 from "uuid/v1";
@@ -161,6 +169,9 @@ export default {
     this.state = this.task.state;
     this.thisDisabled = this.disabled;
     this.date = this.task.date;
+    if (this.task.state == "finish") {
+      this.thisDisabled = true;
+    }
   }
 };
 </script>
