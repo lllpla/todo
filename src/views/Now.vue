@@ -79,11 +79,6 @@ export default {
         return state.todoList;
       }
     })
-  },
-  mounted() {
-    if (this.todoList.length == 0) {
-      this.$store.commit("initTasks");
-    }
   }
 };
 </script>

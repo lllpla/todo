@@ -133,7 +133,7 @@
         </q-card>
       </div>
       <div style="margin-top:20px">
-        <router-view />
+        <router-view name="now" />
       </div>
     </q-page-container>
   </q-layout>
@@ -195,6 +195,11 @@ export default {
         return state.todoList;
       }
     })
+  },
+  mounted() {
+    if (this.todoList.length == 0) {
+      this.$store.commit("initTasks");
+    }
   }
 };
 </script>
