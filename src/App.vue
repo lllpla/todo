@@ -1,100 +1,193 @@
 <template>
-  <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-icon large>event</v-icon>
-        待办任务
-      </div>
-      <v-spacer></v-spacer>
-      <v-row nogutter class="d-flex align-right">
-        <v-col lg="2" sm="4" md="4" xs="6">
-          <v-select
-            class="body-2"
-            :items="taskTypes"
-            v-model="type"
-            label="任务类型"
-            :outlined="outlined"
-            :disabled="thisDisabled"
-            solo
-            dense
-            light
-            flat
-            hide-details
-          ></v-select>
-        </v-col>
-        <v-col lg="10" sm="8" md="8" xs="6">
-          <v-text-field
-            class="body-2"
-            placeholder="请输入任务内容"
-            label="任务内容"
-            :disabled="thisDisabled"
-            :outlined="outlined"
-            v-model="text"
-            solo-inverted
-            flat
-            dense
-            hide-details
+  <q-layout view="hHh LpR fFf">
+    <q-header elevated class="bg-white text-black">
+      <q-toolbar>
+        <q-btn dense flat round icon="menu" @click="showMenu()" />
+        <q-avatar>
+          <img src="./assets/keep_48dp.png" />
+        </q-avatar>
+        <q-toolbar-title>
+          待办事项
+        </q-toolbar-title>
+        <q-space />
+        <q-input
+          dense
+          outlined
+          v-model="searchText"
+          input-class="text-right"
+          class="q-ml-md"
+        >
+          <template v-slot:append>
+            <q-icon v-if="searchText === ''" name="search" />
+            <q-icon
+              v-else
+              name="clear"
+              class="cursor-pointer"
+              @click="searchText = ''"
+            />
+          </template>
+        </q-input>
+      </q-toolbar>
+    </q-header>
+    <q-drawer v-model="left" side="left" :mini="mini">
+      <!-- drawer content -->
+      <q-list class="rounded-borders text-primary" style="margin-top:100px">
+        <q-item
+          to="/now"
+          clickable
+          v-ripple
+          :active="link === 'now'"
+          @click="link = 'now'"
+          active-class="my-menu-link"
+        >
+          <q-item-section avatar>
+            <q-icon name="alarm"></q-icon>
+          </q-item-section>
+          <q-item-section class="menu-node">
+            进行中
+          </q-item-section>
+        </q-item>
+        <q-item
+          to="/finish"
+          clickable
+          v-ripple
+          :active="link === 'finish'"
+          @click="link = 'finish'"
+          active-class="my-menu-link"
+        >
+          <q-item-section avatar>
+            <q-icon name="beenhere"></q-icon>
+          </q-item-section>
+          <q-item-section class="menu-node">
+            已完成
+          </q-item-section>
+        </q-item>
+        <q-item
+          to="/store"
+          clickable
+          v-ripple
+          :active="link === 'store'"
+          @click="link = 'store'"
+          active-class="my-menu-link"
+        >
+          <q-item-section avatar>
+            <q-icon name="archive"></q-icon>
+          </q-item-section>
+          <q-item-section class="menu-node">
+            已归档
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-drawer>
+    <q-page-container>
+      <div style="margin-top:20px" class="fit row wrap justify-center">
+        <q-card class="col-8">
+          <q-input
+            style="margin-left:10px;font-size:large;"
+            v-model="title"
+            hide-bottom-space
+            borderless
+            placeholder="添加记事..."
+            @input="checkInput"
           >
-            <v-btn small slot="append" color="success" @click="addTask" icon>
-              <v-icon>add_circle</v-icon>
-            </v-btn>
-          </v-text-field>
-        </v-col>
-      </v-row>
-    </v-app-bar>
-    <v-content>
-      <Main />
-    </v-content>
-  </v-app>
+          </q-input>
+          <q-input
+            v-show="textshow"
+            style="margin-left:10px"
+            v-model="text"
+            placeholder="添加记事内容..."
+            autogrow
+            borderless
+            type="textarea"
+          />
+          <q-card-actions align="right" v-show="textshow">
+            <q-btn
+              flat
+              round
+              color="red"
+              icon="clear"
+              @click="clearAll"
+            ></q-btn>
+            <q-btn
+              flat
+              round
+              color="primary"
+              icon="add"
+              @click="addNote"
+            ></q-btn>
+          </q-card-actions>
+        </q-card>
+      </div>
+      <div style="margin-top:20px">
+        <router-view />
+      </div>
+    </q-page-container>
+    <q-footer elevated class="bg-grey-8 text-white">
+      <q-toolbar>
+        <q-toolbar-title>
+          title
+        </q-toolbar-title>
+      </q-toolbar>
+    </q-footer>
+  </q-layout>
 </template>
-
 <script>
-import Main from "./components/Main";
 import uuidv1 from "uuid/v1";
-
 export default {
   name: "App",
 
-  components: {
-    Main
-  },
+  components: {},
 
-  data: () => ({
-    taskTypes: ["工作", "学习", "生活"],
-    todoList: [],
-    type: "工作",
-    text: ""
-  }),
+  data() {
+    return {
+      todoList: [],
+      left: true,
+      mini: false,
+      link: "now",
+      textshow: false,
+      title: "",
+      text: "",
+      searchText: ""
+    };
+  },
   methods: {
-    addTask() {
-      if (this.text === "") {
-        this.snackbar = true;
-        return;
-      }
-      const oneTask = {
-        id: uuidv1(),
-        type: this.type,
-        text: this.text,
-        date: new Date().toLocaleString(),
-        state: "start"
-      };
-      let list = this.getTodoList();
-      list.unshift(oneTask);
-      this.setTodoList(list);
-      this.type == "工作";
-      this.text = "";
-    },
-    getTodoList() {
-      if (localStorage.todoList) {
-        return JSON.parse(localStorage.todoList);
+    showMenu() {
+      if (this.left) {
+        this.mini = !this.mini;
       } else {
-        return [];
+        this.left = !this.left;
       }
     },
-    setTodoList(todoList) {
-      localStorage.todoList = JSON.stringify(todoList);
-      this.$bus.$emit("resetTodoList");
+    checkInput() {
+      if (this.title !== "") {
+        this.textshow = true;
+      } else {
+        this.textshow = false;
+      }
+    },
+    clearAll() {
+      this.textshow = false;
+      this.text = "";
+      this.title = "";
+    },
+    addNote() {
+      const note = {
+        title: this.title,
+        text: this.text,
+        id: uuidv1(),
+        state: "running"
+      };
+      this.todoList.push(note);
+      this.$store.commit("SetTasks", this.todoList);
+      this.clearAll();
     }
   }
 };
 </script>
+<style lang="sass">
+.my-menu-link
+  color: white
+  background: #feefc3
+.menu-node
+  font-size: 0.875em
+</style>

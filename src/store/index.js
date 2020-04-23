@@ -8,8 +8,8 @@ export default new Vuex.Store({
     todoList: []
   },
   mutations: {
-    add(state, oneTodo) {
-      state.todoList.unshift(oneTodo);
+    SetTasks(state, todoList) {
+      state.todoList = todoList;
     }
   },
   actions: {},

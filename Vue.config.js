@@ -1,5 +1,11 @@
 module.exports = {
   publicPath: "/todo",
   outputDir: "docs",
-  transpileDependencies: ["vuetify"]
+  pluginOptions: {
+    quasar: {
+      importStrategy: "kebab",
+      rtlSupport: false
+    }
+  },
+  transpileDependencies: ["quasar"]
 };
