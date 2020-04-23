@@ -13,7 +13,10 @@ export default new Vuex.Store({
       localStorage.setItem("lee_todolist", JSON.stringify(todoList));
     },
     initTasks(state) {
-      state.todoList = JSON.parse(localStorage.getItem("lee_todolist"));
+      const store = localStorage.getItem("lee_todolist");
+      if (store != null) {
+        state.todoList = JSON.parse(localStorage.getItem("lee_todolist"));
+      }
     }
   },
   actions: {},
