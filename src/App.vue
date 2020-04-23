@@ -94,7 +94,9 @@
         style="margin-top:20px;margin-left:10px"
         class="fit row wrap justify-center"
       >
-        <q-card class="col-lg-8 col-xl-8  col-md-8 col-xs-11">
+        <q-card
+          :class="'col-lg-8 col-xl-8  col-md-8 col-xs-11 bg-' + pickColor"
+        >
           <q-input
             style="margin-left:10px;font-size:large;"
             v-model="title"
@@ -102,38 +104,58 @@
             dense
             borderless
             placeholder="添加记事..."
-            @input="checkInput"
           >
           </q-input>
-          <q-input
-            v-show="textshow"
-            style="margin-left:10px"
-            v-model="text"
-            placeholder="添加记事内容..."
-            autogrow
-            borderless
-            type="textarea"
-          />
-          <q-card-actions align="right" v-show="textshow">
-            <q-btn
-              flat
-              round
-              color="red"
-              icon="clear"
-              @click="clearAll"
-            ></q-btn>
-            <q-btn
-              flat
-              round
-              color="primary"
-              icon="add"
-              @click="addNote"
-            ></q-btn>
-          </q-card-actions>
+
+          <template v-if="title !== ''">
+            <q-input
+              style="margin-left:10px"
+              v-model="text"
+              dense
+              hide-bottom-space
+              placeholder="添加记事内容..."
+              autogrow
+              borderless
+              type="textarea"
+            />
+            <q-card-actions align="right">
+              <q-btn flat round color="primary" icon="colorize">
+                <q-popup-proxy v-model="colorPickerShow">
+                  <q-banner>
+                    <q-btn
+                      round
+                      v-for="(color, index) in colors"
+                      :key="index"
+                      :color="color"
+                      @click="
+                        pickColor = color;
+                        colorPickerShow = !colorPickerShow;
+                      "
+                      size="xs"
+                    ></q-btn>
+                  </q-banner>
+                </q-popup-proxy>
+              </q-btn>
+              <q-btn
+                flat
+                round
+                color="red"
+                icon="clear"
+                @click="clearAll"
+              ></q-btn>
+              <q-btn
+                flat
+                round
+                color="primary"
+                icon="add"
+                @click="addNote"
+              ></q-btn>
+            </q-card-actions>
+          </template>
         </q-card>
       </div>
       <div style="margin-top:20px">
-        <router-view name="now" />
+        <router-view />
       </div>
     </q-page-container>
   </q-layout>
@@ -141,6 +163,8 @@
 <script>
 import { mapState } from "vuex";
 import uuidv1 from "uuid/v1";
+import { date } from "quasar";
+
 export default {
   name: "App",
 
@@ -152,9 +176,21 @@ export default {
       mini: false,
       link: "now",
       textshow: false,
+      colorPickerShow: false,
       title: "",
+      pickColor: "white",
       text: "",
-      searchText: ""
+      searchText: "",
+      colors: [
+        "indigo-2",
+        "indigo-11",
+        "purple-2",
+        "grey",
+        "cyan-1",
+        "teal-1",
+        "green-1",
+        "yellow-1"
+      ]
     };
   },
   methods: {
@@ -165,24 +201,21 @@ export default {
         this.left = !this.left;
       }
     },
-    checkInput() {
-      if (this.title !== "") {
-        this.textshow = true;
-      } else {
-        this.textshow = false;
-      }
-    },
     clearAll() {
       this.textshow = false;
+      this.pickColor = "white";
       this.text = "";
       this.title = "";
     },
     addNote() {
       const note = {
         title: this.title,
-        text: this.text,
+        text: (this.text + "").replace(/\n/g, "<br/>"),
         id: uuidv1(),
-        state: "running"
+        state: "running",
+        active: false,
+        color: this.pickColor,
+        time: date.formatDate(new Date(), "YYYY-MM-DD HH:mm:ss")
       };
       this.todoList.push(note);
       this.$store.commit("SetTasks", this.todoList);

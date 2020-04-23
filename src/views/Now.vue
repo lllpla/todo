@@ -10,8 +10,9 @@
     >
       <q-card
         style="margin-top:20px;margin-left:10px;margin-right:10px"
-        @mouseover="hoverStyle($event)"
-        @mouseleave="leaveStyle($event)"
+        :class="getClass(todo)"
+        @mouseover="todo.active = true"
+        @mouseleave="todo.active = false"
       >
         <q-card-section>
           <div class="row items-center no-wrap">
@@ -23,7 +24,7 @@
                 <q-menu cover auto-close>
                   <q-list>
                     <q-item clickable>
-                      <q-item-section @click="deleteTask(todo.id)"
+                      <q-item-section @click="deleteTask(todo)"
                         >删除</q-item-section
                       >
                     </q-item>
@@ -39,8 +40,12 @@
             </div>
           </div>
         </q-card-section>
-        <q-card-section>
-          <div>{{ todo.text }}</div>
+        <q-card-section v-html="todo.text"></q-card-section>
+        <q-separator />
+        <q-card-section class="fit row  justify-end">
+          <q-chip dense class="text-caption">
+            {{ todo.time }}
+          </q-chip>
         </q-card-section>
       </q-card>
     </q-intersection>
@@ -58,13 +63,21 @@ export default {
     changeState(id, state) {
       if (this.todoList) {
         const todo = this.todoList.find(todo => todo.id === id);
+        todo.active = false;
         todo.state = state;
         this.$store.commit("SetTasks", this.todoList);
       }
     },
-    deleteTask(id) {
-      const del_List = this.todoList.filter(todo => todo.id !== id);
+    getClass(todo) {
+      if (todo.active == undefined || todo.active) {
+        return "shadow-8 bg-" + todo.color;
+      }
+      return "bg-" + todo.color;
+    },
+    deleteTask(this_todo) {
+      const del_List = this.todoList.filter(todo => todo.id !== this_todo.id);
       this.$store.commit("SetTasks", del_List);
+      this.$q.notify("111111");
     },
     hoverStyle($event) {
       $event.currentTarget.className = "q-card shadow-8";
