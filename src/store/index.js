@@ -10,6 +10,10 @@ export default new Vuex.Store({
   mutations: {
     SetTasks(state, todoList) {
       state.todoList = todoList;
+      localStorage.setItem("lee_todolist", JSON.stringify(todoList));
+    },
+    initTasks(state) {
+      state.todoList = JSON.parse(localStorage.getItem("lee_todolist"));
     }
   },
   actions: {},

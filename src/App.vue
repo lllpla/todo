@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh LpR fFf">
+  <q-layout view="hHh Lpr lff" style="overflow: hidden;">
     <q-header elevated class="bg-white text-black">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="showMenu()" />
@@ -29,21 +29,29 @@
         </q-input>
       </q-toolbar>
     </q-header>
-    <q-drawer v-model="left" side="left" :mini="mini">
+    <q-drawer
+      v-model="left"
+      side="left"
+      :width="200"
+      :breakpoint="500"
+      show-if-above
+      :mini="mini"
+    >
       <!-- drawer content -->
-      <q-list class="rounded-borders text-primary" style="margin-top:100px">
+      <q-list class="rounded-borders text-black" style="margin-top:100px">
         <q-item
           to="/now"
           clickable
           v-ripple
           :active="link === 'now'"
           @click="link = 'now'"
+          class="menu-node"
           active-class="my-menu-link"
         >
           <q-item-section avatar>
-            <q-icon name="alarm"></q-icon>
+            <q-icon rounded name="alarm"></q-icon>
           </q-item-section>
-          <q-item-section class="menu-node">
+          <q-item-section>
             进行中
           </q-item-section>
         </q-item>
@@ -53,12 +61,13 @@
           v-ripple
           :active="link === 'finish'"
           @click="link = 'finish'"
+          class="menu-node"
           active-class="my-menu-link"
         >
           <q-item-section avatar>
-            <q-icon name="beenhere"></q-icon>
+            <q-icon rounded name="beenhere"></q-icon>
           </q-item-section>
-          <q-item-section class="menu-node">
+          <q-item-section>
             已完成
           </q-item-section>
         </q-item>
@@ -68,24 +77,29 @@
           v-ripple
           :active="link === 'store'"
           @click="link = 'store'"
+          class="menu-node"
           active-class="my-menu-link"
         >
           <q-item-section avatar>
-            <q-icon name="archive"></q-icon>
+            <q-icon rounded name="archive"></q-icon>
           </q-item-section>
-          <q-item-section class="menu-node">
+          <q-item-section>
             已归档
           </q-item-section>
         </q-item>
       </q-list>
     </q-drawer>
     <q-page-container>
-      <div style="margin-top:20px" class="fit row wrap justify-center">
-        <q-card class="col-8">
+      <div
+        style="margin-top:20px;margin-left:10px"
+        class="fit row wrap justify-center"
+      >
+        <q-card class="col-lg-8 col-xl-8  col-md-8 col-xs-11">
           <q-input
             style="margin-left:10px;font-size:large;"
             v-model="title"
             hide-bottom-space
+            dense
             borderless
             placeholder="添加记事..."
             @input="checkInput"
@@ -122,16 +136,10 @@
         <router-view />
       </div>
     </q-page-container>
-    <q-footer elevated class="bg-grey-8 text-white">
-      <q-toolbar>
-        <q-toolbar-title>
-          title
-        </q-toolbar-title>
-      </q-toolbar>
-    </q-footer>
   </q-layout>
 </template>
 <script>
+import { mapState } from "vuex";
 import uuidv1 from "uuid/v1";
 export default {
   name: "App",
@@ -140,7 +148,6 @@ export default {
 
   data() {
     return {
-      todoList: [],
       left: true,
       mini: false,
       link: "now",
@@ -181,6 +188,13 @@ export default {
       this.$store.commit("SetTasks", this.todoList);
       this.clearAll();
     }
+  },
+  computed: {
+    ...mapState({
+      todoList: state => {
+        return state.todoList;
+      }
+    })
   }
 };
 </script>
@@ -188,6 +202,8 @@ export default {
 .my-menu-link
   color: white
   background: #feefc3
+  font-size: 0.875em
 .menu-node
   font-size: 0.875em
+  border-radius: 0 25px 25px 0;
 </style>

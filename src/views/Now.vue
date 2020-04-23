@@ -6,7 +6,7 @@
     <q-intersection
       v-for="todo in todoList.filter(todo => todo.state == 'running')"
       :key="todo.id"
-      transition="rotate"
+      transition="scale"
     >
       <q-card
         style="margin-top:20px;margin-left:10px;margin-right:10px"
@@ -63,8 +63,8 @@ export default {
       }
     },
     deleteTask(id) {
-      this.todoList = this.todoList.filter(todo => todo.id !== id);
-      this.$store.commit("SetTasks", this.todoList);
+      const del_List = this.todoList.filter(todo => todo.id !== id);
+      this.$store.commit("SetTasks", del_List);
     },
     hoverStyle($event) {
       $event.currentTarget.className = "q-card shadow-8";
@@ -79,6 +79,11 @@ export default {
         return state.todoList;
       }
     })
+  },
+  mounted() {
+    if (this.todoList.length == 0) {
+      this.$store.commit("initTasks");
+    }
   }
 };
 </script>
