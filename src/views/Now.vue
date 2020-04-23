@@ -77,7 +77,23 @@ export default {
     deleteTask(this_todo) {
       const del_List = this.todoList.filter(todo => todo.id !== this_todo.id);
       this.$store.commit("SetTasks", del_List);
-      this.$q.notify("111111");
+
+      this.$q.notify({
+        message: "当前笔记[" + this_todo.title + "]已删除",
+        progress: true,
+        timeout: 5000,
+        actions: [
+          {
+            label: "撤销",
+            color: "yellow",
+            handler: () => {
+              del_List.push(this_todo);
+              this.$store.commit("SetTasks", del_List);
+              this.$q.notify("删除已撤销");
+            }
+          }
+        ]
+      });
     },
     hoverStyle($event) {
       $event.currentTarget.className = "q-card shadow-8";
@@ -95,4 +111,8 @@ export default {
   }
 };
 </script>
-<style></style>
+<style>
+.notify_process {
+  color: grey;
+}
+</style>

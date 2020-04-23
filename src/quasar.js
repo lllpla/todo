@@ -5,7 +5,14 @@ import "@quasar/extras/material-icons/material-icons.css";
 import { Quasar, Notify } from "quasar";
 
 Vue.use(Quasar, {
-  config: {},
+  config: {
+    notify: {
+      color: "black",
+      textColor: "white",
+      position: "left",
+      timeout: 2000
+    }
+  },
   components: {
     /* not needed if importStrategy is not 'manual' */
   },
