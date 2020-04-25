@@ -10,7 +10,12 @@ export default new Vuex.Store({
     todoList: [],
     sha: null,
     postState: "idle",
-    settings: null
+    settings: {
+      token: "",
+      apiUrl: "https://api.github.com",
+      user: "",
+      repo: ""
+    }
   },
   mutations: {
     SetTasks(state, payload) {
@@ -30,7 +35,7 @@ export default new Vuex.Store({
   },
   actions: {
     init({ commit, state }) {
-      if (state.settings == null) {
+      if (state.settings.token == "") {
         return;
       }
       commit("posting", { postState: "waiting" });
@@ -47,7 +52,7 @@ export default new Vuex.Store({
       });
     },
     saveTask({ commit, state }, payload) {
-      if (state.settings == null) {
+      if (state.settings.token == "") {
         return;
       }
       commit("posting", { postState: "waiting" });
