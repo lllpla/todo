@@ -2,6 +2,7 @@ import Vue from "vue";
 import { Base64 } from "js-base64";
 import defaultSettings from "../setting";
 const { token, apiUrl, repo, user } = defaultSettings;
+import { date } from "quasar";
 
 export function getDataFile(fileName) {
   return Vue.http.get(
@@ -16,7 +17,7 @@ export function getDataFile(fileName) {
 
 export function saveDataFile(fileName, input, sha) {
   const params = {
-    message: "测试提交",
+    message: "数据更新--" + date.formatDate(new Date(), "YYYY-MM-DD HH:mm:ss"),
     content: Base64.encode(input),
     sha: sha
   };
