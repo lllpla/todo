@@ -9,6 +9,14 @@
         <q-toolbar-title>
           待办事项
         </q-toolbar-title>
+        <q-circular-progress
+          indeterminate
+          v-if="postState == 'waiting'"
+          size="30px"
+          :thickness="0.33"
+          color="lime"
+          track-color="grey-3"
+        />
         <q-space />
         <q-input
           dense
@@ -172,6 +180,7 @@ export default {
 
   data() {
     return {
+      githubData: null,
       left: true,
       mini: false,
       link: "now",
@@ -218,7 +227,9 @@ export default {
         time: date.formatDate(new Date(), "YYYY-MM-DD HH:mm:ss")
       };
       this.todoList.push(note);
-      this.$store.commit("SetTasks", this.todoList);
+      this.$store.dispatch("saveTask", {
+        todoList: this.todoList
+      });
       this.clearAll();
     }
   },
@@ -226,12 +237,15 @@ export default {
     ...mapState({
       todoList: state => {
         return state.todoList;
+      },
+      postState: state => {
+        return state.postState;
       }
     })
   },
   mounted() {
     if (this.todoList.length == 0) {
-      this.$store.commit("initTasks");
+      this.$store.dispatch("init");
     }
   }
 };

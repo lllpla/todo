@@ -65,7 +65,9 @@ export default {
         const todo = this.todoList.find(todo => todo.id === id);
         todo.active = false;
         todo.state = state;
-        this.$store.commit("SetTasks", this.todoList);
+        this.$store.dispatch("saveTask", {
+          todoList: this.todoList
+        });
       }
     },
     getClass(todo) {
@@ -76,8 +78,9 @@ export default {
     },
     deleteTask(this_todo) {
       const del_List = this.todoList.filter(todo => todo.id !== this_todo.id);
-      this.$store.commit("SetTasks", del_List);
-
+      this.$store.dispatch("saveTask", {
+        todoList: del_List
+      });
       this.$q.notify({
         message: "当前笔记[" + this_todo.title + "]已删除",
         progress: true,
@@ -88,7 +91,9 @@ export default {
             color: "yellow",
             handler: () => {
               del_List.push(this_todo);
-              this.$store.commit("SetTasks", del_List);
+              this.$store.dispatch("saveTask", {
+                todoList: del_List
+              });
               this.$q.notify("删除已撤销");
             }
           }
