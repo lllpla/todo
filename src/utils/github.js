@@ -25,7 +25,6 @@ export function saveDataFile(fileName, input, sha, settings) {
     content: Base64.encode(input),
     sha: sha
   };
-  console.log(params);
   return Vue.http.put(
     settings.apiUrl +
       "/repos/" +
@@ -33,7 +32,7 @@ export function saveDataFile(fileName, input, sha, settings) {
       "/" +
       settings.repo +
       "/contents/" +
-      settings.fileName,
+      fileName,
     params,
     {
       headers: {
