@@ -1,21 +1,25 @@
 import Vue from "vue";
 import { Base64 } from "js-base64";
-import defaultSettings from "../setting";
-const { token, apiUrl, repo, user } = defaultSettings;
 import { date } from "quasar";
 
-export function getDataFile(fileName) {
+export function getDataFile(fileName, settings) {
   return Vue.http.get(
-    apiUrl + "/repos/" + user + "/" + repo + "/contents/" + fileName,
+    settings.apiUrl +
+      "/repos/" +
+      settings.user +
+      "/" +
+      settings.repo +
+      "/contents/" +
+      fileName,
     {
       headers: {
-        Authorization: "token " + token
+        Authorization: "token " + settings.token
       }
     }
   );
 }
 
-export function saveDataFile(fileName, input, sha) {
+export function saveDataFile(fileName, input, sha, settings) {
   const params = {
     message: "数据更新--" + date.formatDate(new Date(), "YYYY-MM-DD HH:mm:ss"),
     content: Base64.encode(input),
@@ -23,11 +27,17 @@ export function saveDataFile(fileName, input, sha) {
   };
   console.log(params);
   return Vue.http.put(
-    apiUrl + "/repos/" + user + "/" + repo + "/contents/" + fileName,
+    settings.apiUrl +
+      "/repos/" +
+      settings.user +
+      "/" +
+      settings.repo +
+      "/contents/" +
+      settings.fileName,
     params,
     {
       headers: {
-        Authorization: "token " + token
+        Authorization: "token " + settings.token
       }
     }
   );

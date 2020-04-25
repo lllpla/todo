@@ -9,7 +9,8 @@ export default new Vuex.Store({
   state: {
     todoList: [],
     sha: null,
-    postState: "idle"
+    postState: "idle",
+    settings: null
   },
   mutations: {
     SetTasks(state, payload) {
@@ -22,12 +23,18 @@ export default new Vuex.Store({
     },
     posting(state, payload) {
       state.postState = payload.postState;
+    },
+    initSettings(state, payload) {
+      state.settings = payload.settings;
     }
   },
   actions: {
-    init({ commit }) {
+    init({ commit, state }) {
+      if (state.settings == null) {
+        return;
+      }
       commit("posting", { postState: "waiting" });
-      getDataFile("todoList.json").then(res => {
+      getDataFile("todoList.json", state.settings).then(res => {
         commit("posting", { postState: "idle" });
         if (res.status == 404) {
           return;
@@ -40,10 +47,18 @@ export default new Vuex.Store({
       });
     },
     saveTask({ commit, state }, payload) {
+      if (state.settings == null) {
+        return;
+      }
       commit("posting", { postState: "waiting" });
       const todoList = payload.todoList;
       const sha = state.sha;
-      saveDataFile("todoList.json", JSON.stringify(todoList), sha).then(res => {
+      saveDataFile(
+        "todoList.json",
+        JSON.stringify(todoList),
+        sha,
+        state.settings
+      ).then(res => {
         commit("posting", { postState: "idle" });
         if (res.body.content.sha) {
           commit("initTasks", {

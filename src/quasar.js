@@ -2,7 +2,7 @@ import Vue from "vue";
 
 import "./styles/quasar.sass";
 import "@quasar/extras/material-icons/material-icons.css";
-import { Quasar, Notify } from "quasar";
+import { Quasar, Notify, LocalStorage } from "quasar";
 
 Vue.use(Quasar, {
   config: {
@@ -19,5 +19,5 @@ Vue.use(Quasar, {
   directives: {
     /* not needed if importStrategy is not 'manual' */
   },
-  plugins: { Notify }
+  plugins: { Notify, LocalStorage }
 });

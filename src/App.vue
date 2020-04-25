@@ -95,6 +95,22 @@
             已归档
           </q-item-section>
         </q-item>
+        <q-item
+          to="/setting"
+          clickable
+          v-ripple
+          :active="link === 'setting'"
+          @click="link = 'setting'"
+          class="menu-node"
+          active-class="my-menu-link"
+        >
+          <q-item-section avatar>
+            <q-icon rounded name="settings"></q-icon>
+          </q-item-section>
+          <q-item-section>
+            设置
+          </q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
     <q-page-container>
@@ -162,7 +178,7 @@
           </template>
         </q-card>
       </div>
-      <div style="margin-top:20px">
+      <div class="fit row justify-center" style="margin-top:20px">
         <router-view />
       </div>
     </q-page-container>
@@ -244,6 +260,15 @@ export default {
     })
   },
   mounted() {
+    if (this.$q.localStorage.has("lee-todo-settings")) {
+      let settings = this.$q.localStorage.getItem("lee-todo-settings");
+      console.log(settings);
+      this.$store.commit("initSettings", { settings: settings });
+    } else {
+      this.$router.push({
+        path: "/setting"
+      });
+    }
     if (this.todoList.length == 0) {
       this.$store.dispatch("init");
     }

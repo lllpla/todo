@@ -57,7 +57,7 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "Home",
+  name: "now",
   components: {},
   methods: {
     changeState(id, state) {
