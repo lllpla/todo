@@ -16,8 +16,8 @@ npm run build
 ```
 ## 说明
  ### 主要框架
- [quasar](https://quasar.dev/)
- [vue](https://cn.vuejs.org/)
+ - [quasar](https://quasar.dev/)
+ - [vue](https://cn.vuejs.org/)
  ### 当前功能
  - 轻量：纯静态vue页面，可部署在githubpages
  - 存储：利用github-api存储，不需要额外的数据库(初次使用需要配置token\user\repo)。
