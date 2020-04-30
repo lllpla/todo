@@ -54,7 +54,7 @@ publicPath要指定为你pages服务的相对路径，例如：
 ![title](https://raw.githubusercontent.com/lllpla/img/master/gitnote/2020/04/30/1588233893441-1588233893443.png)
 
 ### 申请githubToken
-1. 申请githubToken--> https://github.com/settings/tokens，只需要repo权限
+1. 申请[githubToken](https://github.com/settings/tokens)，只需要repo权限
 ![title](https://raw.githubusercontent.com/lllpla/img/master/gitnote/2020/04/30/1588234026213-1588234026215.png)
 2. 新建一个private项目。
 3. 打开todoList页面 配置到设置中去。
