@@ -6,9 +6,7 @@
         <q-avatar>
           <img src="./assets/keep_48dp.png" />
         </q-avatar>
-        <q-toolbar-title>
-          待办事项
-        </q-toolbar-title>
+        <q-toolbar-title> 待办事项 v{{ version }} </q-toolbar-title>
         <q-circular-progress
           indeterminate
           v-if="postState == 'waiting'"
@@ -190,6 +188,7 @@
 import { mapState } from "vuex";
 import uuidv1 from "uuid/v1";
 import { date } from "quasar";
+import config from "../package.json";
 
 export default {
   name: "App",
@@ -207,6 +206,7 @@ export default {
       title: "",
       pickColor: "white",
       text: "",
+      version: config.version,
       searchText: "",
       colors: [
         "indigo-2",
