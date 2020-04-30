@@ -17,7 +17,7 @@
       >
         <q-card-section>
           <div class="row items-center no-wrap">
-            <div class="col text-h6">
+            <div class="col">
               <div>{{ todo.title }}</div>
             </div>
             <div class="col-auto">
@@ -41,13 +41,22 @@
             </div>
           </div>
         </q-card-section>
-        <q-card-section v-html="todo.text"></q-card-section>
+        <q-card-section>
+          <pre style="fontSize:smaller">{{ todo.text }}</pre>
+        </q-card-section>
         <q-separator />
         <q-card-section class="fit row  justify-end">
           <q-chip dense class="text-caption">
             {{ todo.time }}
           </q-chip>
         </q-card-section>
+        <!-- <q-intersection style="height:45px" transition="fade">
+          <q-btn-group v-if="todo.active" unelevated>
+            <q-btn dense icon="delete_outline" />
+            <q-btn dense icon="color_lens_outline" />
+            <q-btn dense icon="archive_outline" />
+          </q-btn-group>
+        </q-intersection> -->
       </q-card>
     </q-intersection>
     <q-dialog v-model="dialog.show">
@@ -68,7 +77,9 @@
             borderless
             type="textarea"
             autofocus
+            ref="dialogDetial"
             v-model="dialog.text"
+            v-on:keydown.tab.prevent="editerTab"
           ></q-input>
         </q-card-section>
         <q-card-actions align="right">
@@ -99,10 +110,27 @@ export default {
     };
   },
   methods: {
+    editerTab() {
+      // 光标的偏移位置
+      const item = "    ";
+      const input = this.$refs.dialogDetial.$refs.input;
+      var startPos = input.selectionStart; // input 第0个字符到选中的字符
+      var endPos = input.selectionEnd; // 选中的字符到最后的字符
+      if (startPos === undefined || endPos === undefined) return;
+      var txt = input.value;
+      // 将表情添加到选中的光标位置
+      var result = txt.substring(0, startPos) + item + txt.substring(endPos);
+      input.value = result; // 赋值给input的value
+      // 重新定义光标位置
+      input.focus();
+      input.selectionStart = startPos + item.length;
+      input.selectionEnd = startPos + item.length;
+      this.dialog.text = result; // 赋值给表单中的的字段
+    },
     showDialog($event, todo) {
       this.dialog.show = true;
       this.dialog.title = todo.title;
-      this.dialog.text = (todo.text + "").replace(/<br\/>/g, "\n");
+      this.dialog.text = todo.text + "";
       this.dialog.color = todo.color;
       this.dialog.id = todo.id;
     },
@@ -113,7 +141,7 @@ export default {
       }
       const todo = this.todoList.find(one => one.id == this.dialog.id);
       todo.title = this.dialog.title;
-      todo.text = (this.dialog.text + "").replace(/\n/g, "<br/>");
+      todo.text = this.dialog.text + "";
       todo.active = false;
       this.$store.dispatch("saveTask", {
         todoList: this.todoList
@@ -179,5 +207,9 @@ export default {
 <style>
 .notify_process {
   color: grey;
+}
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 </style>

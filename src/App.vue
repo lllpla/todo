@@ -141,6 +141,8 @@
               autogrow
               borderless
               type="textarea"
+              @keydown.tab.prevent="editerTab"
+              ref="noteDetail"
             />
             <q-card-actions align="right">
               <q-btn flat round color="primary" icon="colorize">
@@ -219,6 +221,24 @@ export default {
     };
   },
   methods: {
+    editerTab() {
+      // 光标的偏移位置
+      const item = "    ";
+      const input = this.$refs.noteDetail.$refs.input;
+      var startPos = input.selectionStart; // input 第0个字符到选中的字符
+      var endPos = input.selectionEnd; // 选中的字符到最后的字符
+
+      if (startPos === undefined || endPos === undefined) return;
+      var txt = input.value;
+      // 将表情添加到选中的光标位置
+      var result = txt.substring(0, startPos) + item + txt.substring(endPos);
+      input.value = result; // 赋值给input的value
+      // 重新定义光标位置
+      input.focus();
+      input.selectionStart = startPos + item.length;
+      input.selectionEnd = startPos + item.length;
+      this.dialog.text = result; // 赋值给表单中的的字段
+    },
     showMenu() {
       if (this.left) {
         this.mini = !this.mini;
@@ -235,7 +255,7 @@ export default {
     addNote() {
       const note = {
         title: this.title,
-        text: (this.text + "").replace(/\n/g, "<br/>"),
+        text: this.text + "",
         id: uuidv1(),
         state: "running",
         active: false,
@@ -252,7 +272,7 @@ export default {
   computed: {
     ...mapState({
       todoList: state => {
-        return state.todoList;
+        return state.todoList.reverse();
       },
       postState: state => {
         return state.postState;
