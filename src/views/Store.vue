@@ -1,5 +1,5 @@
 <template>
-  <TaskList :taskType="'finished'"></TaskList>
+  <TaskList :taskType="'store'"></TaskList>
 </template>
 <script>
 import TaskList from "./TaskList.vue";
