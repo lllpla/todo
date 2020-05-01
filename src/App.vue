@@ -148,7 +148,7 @@ export default {
   methods: {
     editerTab() {
       // 光标的偏移位置
-      const item = "    ";
+      const item = "	";
       const input = this.$refs.noteDetail.$refs.input;
       var startPos = input.selectionStart; // input 第0个字符到选中的字符
       var endPos = input.selectionEnd; // 选中的字符到最后的字符
