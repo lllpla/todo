@@ -16,13 +16,20 @@
         @click="showDialog($event, todo)"
       >
         <q-card-section>
-          <div class="row items-center no-wrap">
+          <div class="row items-center no-wrap" style="height:40px">
             <div class="col">
               <div>{{ todo.title }}</div>
             </div>
             <div class="col-auto">
-              <q-btn color="grey-7" round flat icon="more_vert" @click.stop>
-                <q-menu auto-close>
+              <q-btn
+                dense
+                color="grey-7"
+                round
+                flat
+                icon="more_vert"
+                @click.stop
+              >
+                <q-menu>
                   <q-list>
                     <q-item
                       v-if="taskType != 'running'"
