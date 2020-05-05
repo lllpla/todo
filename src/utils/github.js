@@ -2,9 +2,11 @@ import Vue from "vue";
 import { Base64 } from "js-base64";
 import { date } from "quasar";
 
+const apiUrl = "https://api.github.com";
+
 export function getDataFile(fileName, settings) {
   return Vue.http.get(
-    settings.apiUrl +
+    apiUrl +
       "/repos/" +
       settings.user +
       "/" +
@@ -26,7 +28,7 @@ export function saveDataFile(fileName, input, sha, settings) {
     sha: sha
   };
   return Vue.http.put(
-    settings.apiUrl +
+    apiUrl +
       "/repos/" +
       settings.user +
       "/" +
