@@ -9,7 +9,7 @@
         <q-toolbar-title> 待办事项 v{{ version }} </q-toolbar-title>
         <q-circular-progress
           indeterminate
-          v-if="postState == 'waiting'"
+          v-if="postState === 'waiting'"
           size="30px"
           :thickness="0.33"
           color="lime"
@@ -20,6 +20,7 @@
           dense
           outlined
           v-model="searchText"
+          @input="commitSearchText"
           input-class="text-right"
           class="q-ml-md"
         >
@@ -146,17 +147,20 @@ export default {
     };
   },
   methods: {
+    commitSearchText() {
+      this.$store.commit("setSearchText", { searchText: this.searchText });
+    },
     editerTab() {
       // 光标的偏移位置
       const item = "	";
       const input = this.$refs.noteDetail.$refs.input;
-      var startPos = input.selectionStart; // input 第0个字符到选中的字符
-      var endPos = input.selectionEnd; // 选中的字符到最后的字符
+      const startPos = input.selectionStart; // input 第0个字符到选中的字符
+      const endPos = input.selectionEnd; // 选中的字符到最后的字符
 
       if (startPos === undefined || endPos === undefined) return;
-      var txt = input.value;
+      const txt = input.value;
       // 将表情添加到选中的光标位置
-      var result = txt.substring(0, startPos) + item + txt.substring(endPos);
+      const result = txt.substring(0, startPos) + item + txt.substring(endPos);
       input.value = result; // 赋值给input的value
       // 重新定义光标位置
       input.focus();
@@ -210,7 +214,7 @@ export default {
         path: "/setting"
       });
     }
-    if (this.todoList.length == 0) {
+    if (this.todoList.length === 0) {
       this.$store.dispatch("init");
     }
   }

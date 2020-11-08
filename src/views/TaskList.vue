@@ -3,8 +3,24 @@
     class="home fit row wrap justify-start items-start content-start"
     style="width:90%"
   >
+    <q-banner
+      rounded
+      dense
+      class="bg-orange text-white"
+      style="width: 90%"
+      v-if="searchText !== ''"
+    >
+      结果已筛选，关键字'{{ this.searchText }}'
+    </q-banner>
     <q-intersection
-      v-for="todo in todoList.filter(todo => todo.state == taskType)"
+      v-for="todo in todoList
+        .filter(todo => todo.state === taskType)
+        .filter(
+          todo =>
+            this.searchText === '' ||
+            todo.title.includes(this.searchText) ||
+            todo.text.includes(this.searchText)
+        )"
       :key="todo.id"
       transition="scale"
     >
@@ -32,21 +48,21 @@
                 <q-menu>
                   <q-list>
                     <q-item
-                      v-if="taskType != 'running'"
+                      v-if="taskType !== 'running'"
                       clickable
                       @click="changeState(todo.id, 'running')"
                     >
                       <q-item-section>还原</q-item-section>
                     </q-item>
                     <q-item
-                      v-if="taskType != 'store'"
+                      v-if="taskType !== 'store'"
                       clickable
                       @click="changeState(todo.id, 'store')"
                     >
                       <q-item-section>归档</q-item-section>
                     </q-item>
                     <q-item
-                      v-if="taskType != 'finished'"
+                      v-if="taskType !== 'finished'"
                       clickable
                       @click="changeState(todo.id, 'finished')"
                     >
@@ -99,6 +115,23 @@
           ></q-input>
         </q-card-section>
         <q-card-actions align="right">
+          <q-btn flat round color="primary" icon="colorize">
+            <q-popup-proxy v-model="colorPickerShow">
+              <q-banner>
+                <q-btn
+                  round
+                  v-for="(color, index) in colors"
+                  :key="index"
+                  :color="color"
+                  @click="
+                    dialog.color = color;
+                    colorPickerShow = !colorPickerShow;
+                  "
+                  size="xs"
+                ></q-btn>
+              </q-banner>
+            </q-popup-proxy>
+          </q-btn>
           <q-btn flat label="取消" color="primary" v-close-popup />
           <q-btn flat label="确定" color="primary" @click="submitModify()" />
         </q-card-actions>
@@ -122,12 +155,23 @@ export default {
   },
   data() {
     return {
+      colors: [
+        "indigo-2",
+        "indigo-11",
+        "purple-2",
+        "grey",
+        "cyan-1",
+        "teal-1",
+        "green-1",
+        "yellow-1"
+      ],
+      colorPickerShow: false,
       dialog: {
         show: false,
         title: "",
         id: "",
         text: "",
-        color: ""
+        color: "",
       }
     };
   },
@@ -161,9 +205,10 @@ export default {
       if (this.$refs.dialogTitle.hasError) {
         return;
       }
-      const todo = this.todoList.find(one => one.id == this.dialog.id);
+      const todo = this.todoList.find(one => one.id === this.dialog.id);
       todo.title = this.dialog.title;
       todo.text = this.dialog.text + "";
+      todo.color = this.dialog.color;
       todo.active = false;
       this.$store.dispatch("saveTask", {
         todoList: this.todoList
@@ -181,7 +226,7 @@ export default {
       }
     },
     getClass(todo) {
-      if (todo.active == undefined || todo.active) {
+      if (todo.active === undefined || todo.active) {
         return "shadow-8 bg-" + todo.color;
       }
       return "bg-" + todo.color;
@@ -221,6 +266,9 @@ export default {
     ...mapState({
       todoList: state => {
         return state.todoList;
+      },
+      searchText: state => {
+        return state.searchText;
       }
     })
   }

@@ -12,7 +12,7 @@
     "@quasar/extras": "^1.0.0",
     "core-js": "^3.6.4",
     "js-base64": "^2.5.2",
-    "quasar": "^1.0.0",
+    "quasar": "^1.14.3",
     "vue": "^2.6.11",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.1.6",
