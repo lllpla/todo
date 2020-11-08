@@ -19,7 +19,12 @@
           todo =>
             this.searchText === '' ||
             todo.title.includes(this.searchText) ||
-            todo.text.includes(this.searchText)
+            todo.text.replace(/(\n)/g, '')
+                     .replace(/(\t)/g, '')
+                     .replace(/(\r)/g, '')
+                     .replace(/<\/?[^>]*>/g, '')
+                     .replace(/\s*/g, '')
+                      .includes(this.searchText)
         )"
       :key="todo.id"
       transition="scale"
@@ -79,8 +84,7 @@
             </div>
           </div>
         </q-card-section>
-        <q-card-section>
-          <pre style="fontSize:smaller">{{ todo.text }}</pre>
+        <q-card-section v-html="todo.text">
         </q-card-section>
         <q-separator />
         <q-card-section class="fit row  justify-end">
@@ -94,6 +98,7 @@
       <q-card :class="getClass(dialog)" style="width: 600px; max-width: 80vw;">
         <q-card-section>
           <q-input
+            dense
             class="text-h5"
             label="标题"
             ref="dialogTitle"
@@ -103,16 +108,14 @@
           ></q-input>
         </q-card-section>
         <q-card-section>
-          <q-input
-            label="内容"
-            borderless
-            type="textarea"
-            autofocus
-            autogrow
-            ref="dialogDetial"
+          <q-editor
+            dense
+            flat
             v-model="dialog.text"
-            v-on:keydown.tab.prevent="editerTab"
-          ></q-input>
+            :content-class="'bg-' + dialog.color"
+            :toolbar-bg="dialog.color"
+            min-height="5rem"
+          />
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat round color="primary" icon="colorize">

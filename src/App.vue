@@ -30,7 +30,10 @@
               v-else
               name="clear"
               class="cursor-pointer"
-              @click="searchText = ''"
+              @click="
+                searchText = '';
+                commitSearchText();
+              "
             />
           </template>
         </q-input>
@@ -48,60 +51,57 @@
           <q-input
             style="margin-left:10px;font-size:large;"
             v-model="title"
+            @input="changeMorph"
             hide-bottom-space
             dense
             borderless
             placeholder="添加记事..."
           >
           </q-input>
-
-          <template v-if="title !== ''">
-            <q-input
-              style="margin-left:10px"
-              v-model="text"
-              dense
-              hide-bottom-space
-              placeholder="添加记事内容..."
-              autogrow
-              borderless
-              type="textarea"
-              @keydown.tab.prevent="editerTab"
-              ref="noteDetail"
-            />
-            <q-card-actions align="right">
-              <q-btn flat round color="primary" icon="colorize">
-                <q-popup-proxy v-model="colorPickerShow">
-                  <q-banner>
-                    <q-btn
-                      round
-                      v-for="(color, index) in colors"
-                      :key="index"
-                      :color="color"
-                      @click="
-                        pickColor = color;
-                        colorPickerShow = !colorPickerShow;
-                      "
-                      size="xs"
-                    ></q-btn>
-                  </q-banner>
-                </q-popup-proxy>
-              </q-btn>
-              <q-btn
+          <q-slide-transition>
+            <div v-show="title !== ''">
+              <q-editor
+                dense
                 flat
-                round
-                color="red"
-                icon="clear"
-                @click="clearAll"
-              ></q-btn>
-              <q-btn
-                flat
-                round
-                color="primary"
-                icon="add"
-                @click="addNote"
-              ></q-btn>
-            </q-card-actions>
-          </template>
+                v-model="text"
+                ref="noteDetail"
+                min-height="5rem"
+              />
+              <q-card-actions align="right">
+                <q-btn flat round color="primary" icon="colorize">
+                  <q-popup-proxy v-model="colorPickerShow">
+                    <q-banner>
+                      <q-btn
+                        round
+                        v-for="(color, index) in colors"
+                        :key="index"
+                        :color="color"
+                        @click="
+                          pickColor = color;
+                          colorPickerShow = !colorPickerShow;
+                        "
+                        size="xs"
+                      ></q-btn>
+                    </q-banner>
+                  </q-popup-proxy>
+                </q-btn>
+                <q-btn
+                  flat
+                  round
+                  color="red"
+                  icon="clear"
+                  @click="clearAll"
+                ></q-btn>
+                <q-btn
+                  flat
+                  round
+                  color="primary"
+                  icon="add"
+                  @click="addNote"
+                ></q-btn>
+              </q-card-actions>
+            </div>
+          </q-slide-transition>
         </q-card>
       </div>
       <div class="fit row justify-center" style="margin-top:20px">
@@ -124,6 +124,7 @@ export default {
 
   data() {
     return {
+      textsMorph: "notdisplay",
       githubData: null,
       left: true,
       mini: false,
