@@ -42,8 +42,8 @@
     <SideBar ref="sideBar"></SideBar>
     <q-page-container>
       <div
-        style="margin-top:20px;margin-left:10px"
-        class="fit row wrap justify-center"
+        style="margin-top:20px;"
+        class="fit row wrap float-left on-right"
       >
         <q-card
           :class="'col-lg-8 col-xl-8  col-md-8 col-xs-11 bg-' + pickColor"
@@ -51,7 +51,6 @@
           <q-input
             style="margin-left:10px;font-size:large;"
             v-model="title"
-            @input="changeMorph"
             hide-bottom-space
             dense
             borderless
