@@ -1,19 +1,19 @@
 <template>
   <div
-      class="home fit row wrap justify-start items-start content-start"
-      style="width:90%"
+    class="home fit row wrap justify-start items-start content-start"
+    style="width:90%"
   >
     <q-banner
-        rounded
-        dense
-        class="bg-orange text-white"
-        style="width: 90%"
-        v-if="searchText !== ''"
+      rounded
+      dense
+      class="bg-orange text-white"
+      style="width: 90%"
+      v-if="searchText !== ''"
     >
       结果已筛选，关键字'{{ this.searchText }}'
     </q-banner>
     <q-intersection
-        v-for="todo in todoList
+      v-for="todo in todoList
         .filter(todo => todo.state === taskType)
         .filter(
           todo =>
@@ -27,15 +27,16 @@
               .replace(/\s*/g, '')
               .includes(this.searchText)
         )"
-        :key="todo.id"
-        transition="scale"
+      once
+      :key="todo.id"
+      transition="flip-up"
     >
       <q-card
-          style="margin-top:10px;margin-left:10px;margin-right:10px"
-          :class="'todo-card '+getClass(todo)"
-          @mouseover="todo.active = true"
-          @mouseleave="todo.active = false"
-          @click="showDialog($event, todo)"
+        style="margin-top:10px;margin-left:10px;margin-right:10px"
+        :class="'todo-card ' + getClass(todo)"
+        @mouseover="todo.active = true"
+        @mouseleave="todo.active = false"
+        @click="showDialog($event, todo)"
       >
         <q-card-section>
           <div class="row items-center no-wrap" style="height:40px">
@@ -44,41 +45,40 @@
             </div>
             <div class="col-auto">
               <q-btn
-                  dense
-                  color="grey-7"
-                  round
-                  flat
-                  icon="more_vert"
-                  @click.stop
+                dense
+                color="grey-7"
+                round
+                flat
+                icon="more_vert"
+                @click.stop
               >
                 <q-menu>
                   <q-list>
                     <q-item
-                        v-if="taskType !== 'running'"
-                        clickable
-                        @click="changeState(todo.id, 'running')"
+                      v-if="taskType !== 'running'"
+                      clickable
+                      @click="changeState(todo.id, 'running')"
                     >
                       <q-item-section>还原</q-item-section>
                     </q-item>
                     <q-item
-                        v-if="taskType !== 'store'"
-                        clickable
-                        @click="changeState(todo.id, 'store')"
+                      v-if="taskType !== 'store'"
+                      clickable
+                      @click="changeState(todo.id, 'store')"
                     >
                       <q-item-section>归档</q-item-section>
                     </q-item>
                     <q-item
-                        v-if="taskType !== 'finished'"
-                        clickable
-                        @click="changeState(todo.id, 'finished')"
+                      v-if="taskType !== 'finished'"
+                      clickable
+                      @click="changeState(todo.id, 'finished')"
                     >
                       <q-item-section>完成</q-item-section>
                     </q-item>
                     <q-item class="text-red" clickable>
                       <q-item-section @click="deleteTask(todo)"
-                      >删除
-                      </q-item-section
-                      >
+                        >删除
+                      </q-item-section>
                     </q-item>
                   </q-list>
                 </q-menu>
@@ -87,7 +87,7 @@
           </div>
         </q-card-section>
         <q-card-section v-html="todo.text"></q-card-section>
-        <q-separator/>
+        <q-separator />
         <q-card-section class="fit row  justify-end">
           <q-chip dense class="text-caption">
             {{ todo.time }}
@@ -99,23 +99,23 @@
       <q-card :class="getClass(dialog)" style="width: 600px; max-width: 80vw;">
         <q-card-section>
           <q-input
-              dense
-              class="text-h5"
-              label="标题"
-              ref="dialogTitle"
-              borderless
-              v-model="dialog.title"
-              :rules="[val => !!val || '请输入标题']"
+            dense
+            class="text-h5"
+            label="标题"
+            ref="dialogTitle"
+            borderless
+            v-model="dialog.title"
+            :rules="[val => !!val || '请输入标题']"
           ></q-input>
         </q-card-section>
         <q-card-section>
           <q-editor
-              dense
-              flat
-              v-model="dialog.text"
-              :content-class="'bg-' + dialog.color"
-              :toolbar-bg="dialog.color"
-              min-height="5rem"
+            dense
+            flat
+            v-model="dialog.text"
+            :content-class="'bg-' + dialog.color"
+            :toolbar-bg="dialog.color"
+            min-height="5rem"
           />
         </q-card-section>
         <q-card-actions align="right">
@@ -123,21 +123,21 @@
             <q-popup-proxy v-model="colorPickerShow">
               <q-banner>
                 <q-btn
-                    round
-                    v-for="(color, index) in colors"
-                    :key="index"
-                    :color="color"
-                    @click="
+                  round
+                  v-for="(color, index) in colors"
+                  :key="index"
+                  :color="color"
+                  @click="
                     dialog.color = color;
                     colorPickerShow = !colorPickerShow;
                   "
-                    size="xs"
+                  size="xs"
                 ></q-btn>
               </q-banner>
             </q-popup-proxy>
           </q-btn>
-          <q-btn flat label="取消" color="primary" v-close-popup/>
-          <q-btn flat label="确定" color="primary" @click="submitModify()"/>
+          <q-btn flat label="取消" color="primary" v-close-popup />
+          <q-btn flat label="确定" color="primary" @click="submitModify()" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -146,7 +146,7 @@
 
 <script>
 // @ is an alias to /src
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "TaskList",
