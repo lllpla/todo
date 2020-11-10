@@ -98,21 +98,30 @@
     </q-intersection>
     <q-dialog v-model="dialog.show">
       <q-card :class="getClass(dialog)" style="width: 600px; max-width: 80vw;">
+        <q-bar :class="'items-center' + ' bg-' + dialog.color">
+          <div class="text-center text-accent" style="font-size: xx-small">内容编辑</div>
+          <q-space />
+          <q-btn
+            flat
+            dense
+            round
+            icon="las la-times"
+            color="negative"
+            v-close-popup
+          />
+        </q-bar>
         <q-card-section>
           <q-input
             dense
-            class="text-h5"
-            label="标题"
             ref="dialogTitle"
             borderless
             v-model="dialog.title"
             :rules="[val => !!val || '请输入标题']"
-          ></q-input>
-        </q-card-section>
-        <q-card-section>
+          />
           <q-editor
             dense
             flat
+            :toolbar="[['bold', 'italic', 'strike', 'underline']]"
             v-model="dialog.text"
             :content-class="'bg-' + dialog.color"
             :toolbar-bg="dialog.color"
@@ -120,7 +129,7 @@
           />
         </q-card-section>
         <q-card-actions align="right">
-          <q-btn flat round color="primary" icon="colorize">
+          <q-btn flat round color="info" icon="las la-palette">
             <q-popup-proxy v-model="colorPickerShow">
               <q-banner>
                 <q-btn
@@ -137,8 +146,14 @@
               </q-banner>
             </q-popup-proxy>
           </q-btn>
-          <q-btn flat label="取消" color="primary" v-close-popup />
-          <q-btn flat label="确定" color="primary" @click="submitModify()" />
+
+          <q-btn
+            flat
+            round
+            icon="las la-check-circle"
+            color="positive"
+            @click="submitModify()"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
