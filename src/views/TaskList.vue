@@ -125,6 +125,7 @@
             flat
             :toolbar="[
               ['bold', 'italic', 'strike', 'underline'],
+              ['quote', 'unordered', 'ordered'],
               [
                 {
                   label: $q.lang.editor.fontSize,
