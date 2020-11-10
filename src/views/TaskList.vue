@@ -99,7 +99,9 @@
     <q-dialog v-model="dialog.show">
       <q-card :class="getClass(dialog)" style="width: 600px; max-width: 80vw;">
         <q-bar :class="'items-center' + ' bg-' + dialog.color">
-          <div class="text-center text-accent" style="font-size: xx-small">内容编辑</div>
+          <div class="text-center text-accent" style="font-size: xx-small">
+            内容编辑
+          </div>
           <q-space />
           <q-btn
             flat
@@ -121,7 +123,27 @@
           <q-editor
             dense
             flat
-            :toolbar="[['bold', 'italic', 'strike', 'underline']]"
+            :toolbar="[
+              ['bold', 'italic', 'strike', 'underline'],
+              [
+                {
+                  label: $q.lang.editor.fontSize,
+                  icon: $q.iconSet.editor.fontSize,
+                  fixedLabel: true,
+                  fixedIcon: true,
+                  list: 'no-icons',
+                  options: [
+                    'size-1',
+                    'size-2',
+                    'size-3',
+                    'size-4',
+                    'size-5',
+                    'size-6',
+                    'size-7'
+                  ]
+                }
+              ]
+            ]"
             v-model="dialog.text"
             :content-class="'bg-' + dialog.color"
             :toolbar-bg="dialog.color"
