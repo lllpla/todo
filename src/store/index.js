@@ -7,6 +7,7 @@ import {
   newFileGitee
 } from "@/utils/gitee";
 import { Base64 } from "js-base64";
+import { date } from "quasar";
 
 Vue.use(Vuex);
 
@@ -30,7 +31,12 @@ export default new Vuex.Store({
       state.sha = payload.sha;
     },
     initTasks(state, payload) {
-      state.todoList = payload.todoList;
+      state.todoList = payload.todoList.sort((a, b) => {
+        return (
+          date.extractDate(b.time, "YYYY-MM-DD HH:mm:ss").getTime() -
+          date.extractDate(a.time, "YYYY-MM-DD HH:mm:ss").getTime()
+        );
+      });
       state.sha = payload.sha;
     },
     posting(state, payload) {

@@ -1,6 +1,19 @@
 {
   "name": "TODOLIST",
   "version": "1.0.1",
+  "colors": [
+    "indigo-2",
+    "indigo-11",
+    "purple-2",
+    "grey",
+    "cyan-1",
+    "teal-2",
+    "green-1",
+    "yellow-1",
+    "orange-2",
+    "lime-2",
+    "brown-2"
+  ],
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

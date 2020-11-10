@@ -6,11 +6,12 @@
     <q-banner
       rounded
       dense
-      class="bg-orange text-white"
-      style="width: 90%"
+      class="bg-orange text-white justify-center on-right"
+      style="width: 97%;margin-top: 5px"
       v-if="searchText !== ''"
     >
-      结果已筛选，关键字'{{ this.searchText }}'
+      结果已筛选，关键字'<b class="text-light-blue-1">{{ this.searchText }}</b
+      >'
     </q-banner>
     <q-intersection
       v-for="todo in todoList
@@ -89,8 +90,8 @@
         <q-card-section v-html="todo.text"></q-card-section>
         <q-separator />
         <q-card-section class="fit row  justify-end">
-          <q-chip dense class="text-caption">
-            {{ todo.time }}
+          <q-chip dense class="text-caption bg-light-blue text-white">
+            {{ getDisplayDate(todo.time) }}
           </q-chip>
         </q-card-section>
       </q-card>
@@ -147,6 +148,8 @@
 <script>
 // @ is an alias to /src
 import { mapState } from "vuex";
+import { date } from "quasar";
+import config from "../../package.json";
 
 export default {
   name: "TaskList",
@@ -159,16 +162,7 @@ export default {
   },
   data() {
     return {
-      colors: [
-        "indigo-2",
-        "indigo-11",
-        "purple-2",
-        "grey",
-        "cyan-1",
-        "teal-1",
-        "green-1",
-        "yellow-1"
-      ],
+      colors: config.colors,
       colorPickerShow: false,
       dialog: {
         show: false,
@@ -180,22 +174,21 @@ export default {
     };
   },
   methods: {
-    editerTab() {
-      // 光标的偏移位置
-      const item = "	";
-      const input = this.$refs.dialogDetial.$refs.input;
-      var startPos = input.selectionStart; // input 第0个字符到选中的字符
-      var endPos = input.selectionEnd; // 选中的字符到最后的字符
-      if (startPos === undefined || endPos === undefined) return;
-      var txt = input.value;
-      // 将表情添加到选中的光标位置
-      var result = txt.substring(0, startPos) + item + txt.substring(endPos);
-      input.value = result; // 赋值给input的value
-      // 重新定义光标位置
-      input.focus();
-      input.selectionStart = startPos + item.length;
-      input.selectionEnd = startPos + item.length;
-      this.dialog.text = result; // 赋值给表单中的的字段
+    getDisplayDate(dateStr) {
+      const notedate = date.extractDate(dateStr, "YYYY-MM-DD HH:mm:ss");
+      if (date.isSameDate(notedate, new Date(), "day")) {
+        return "today";
+      } else if (
+        date.isSameDate(
+          date.addToDate(notedate, { days: 1 }),
+          new Date(),
+          "day"
+        )
+      ) {
+        return "yesterday";
+      } else {
+        return date.formatDate(notedate, "YYYY/MM/DD");
+      }
     },
     showDialog($event, todo) {
       this.dialog.show = true;
