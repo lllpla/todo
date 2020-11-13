@@ -3,9 +3,9 @@
   "version": "1.0.1",
   "colors": [
     "indigo-2",
-    "indigo-11",
+    "indigo-11 text-white",
     "purple-2",
-    "grey",
+    "grey text-white",
     "cyan-1",
     "teal-2",
     "green-1",

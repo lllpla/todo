@@ -1,5 +1,8 @@
 <template>
-  <q-layout view="hHh Lpr lff" style="overflow: hidden;">
+  <q-layout
+    view="hHh Lpr lff"
+    style="overflow: hidden;"
+  >
     <q-header elevated class="bg-white text-black">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="showMenu()" />

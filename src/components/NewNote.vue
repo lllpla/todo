@@ -17,6 +17,8 @@
             flat
             v-model="text"
             ref="noteDetail"
+            :toolbar="text !== '' ? editorToolbar : []"
+            placeholder="请输入内容"
             min-height="5rem"
           />
           <q-card-actions align="right">
@@ -67,6 +69,28 @@ export default {
   name: "NewNote",
   data() {
     return {
+      editorToolbar: [
+        ["bold", "italic", "strike", "underline"],
+        ["quote", "unordered", "ordered"],
+        [
+          {
+            label: this.$q.lang.editor.fontSize,
+            icon: this.$q.iconSet.editor.fontSize,
+            fixedLabel: true,
+            fixedIcon: true,
+            list: "no-icons",
+            options: [
+              "size-1",
+              "size-2",
+              "size-3",
+              "size-4",
+              "size-5",
+              "size-6",
+              "size-7"
+            ]
+          }
+        ]
+      ],
       colorPickerShow: false,
       title: "",
       pickColor: "white",

@@ -90,7 +90,7 @@
         <q-card-section v-html="todo.text"></q-card-section>
         <q-separator />
         <q-card-section class="fit row  justify-end">
-          <q-chip dense class="text-caption bg-light-blue text-white">
+          <q-chip dense color="warning" class="text-caption text-white">
             {{ getDisplayDate(todo.time) }}
           </q-chip>
         </q-card-section>
@@ -116,6 +116,7 @@
           <q-input
             dense
             ref="dialogTitle"
+            :class="'bg-'+dialog.color"
             borderless
             v-model="dialog.title"
             :rules="[val => !!val || '请输入标题']"
@@ -123,28 +124,7 @@
           <q-editor
             dense
             flat
-            :toolbar="[
-              ['bold', 'italic', 'strike', 'underline'],
-              ['quote', 'unordered', 'ordered'],
-              [
-                {
-                  label: $q.lang.editor.fontSize,
-                  icon: $q.iconSet.editor.fontSize,
-                  fixedLabel: true,
-                  fixedIcon: true,
-                  list: 'no-icons',
-                  options: [
-                    'size-1',
-                    'size-2',
-                    'size-3',
-                    'size-4',
-                    'size-5',
-                    'size-6',
-                    'size-7'
-                  ]
-                }
-              ]
-            ]"
+            :toolbar="dialog.text !== '' ? editorToolbar : []"
             v-model="dialog.text"
             :content-class="'bg-' + dialog.color"
             :toolbar-bg="dialog.color"
@@ -200,6 +180,28 @@ export default {
   },
   data() {
     return {
+      editorToolbar: [
+        ["bold", "italic", "strike", "underline"],
+        ["quote", "unordered", "ordered"],
+        [
+          {
+            label: this.$q.lang.editor.fontSize,
+            icon: this.$q.iconSet.editor.fontSize,
+            fixedLabel: true,
+            fixedIcon: true,
+            list: "no-icons",
+            options: [
+              "size-1",
+              "size-2",
+              "size-3",
+              "size-4",
+              "size-5",
+              "size-6",
+              "size-7"
+            ]
+          }
+        ]
+      ],
       colors: config.colors,
       colorPickerShow: false,
       dialog: {
