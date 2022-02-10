@@ -47,7 +47,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
-    "node-sass": "^4.13.0",
+    "node-sass": "^7.0.0",
     "prettier": "^1.19.1",
     "sass-loader": "^8.0.0",
     "vue-cli-plugin-quasar": "~2.0.0",
